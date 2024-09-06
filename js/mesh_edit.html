@@ -4,6 +4,13 @@
     <title>Visual Fruit Nodes</title>
     <script src="https://pixijs.download/v6.5.8/pixi.min.js"></script>
     <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+        }
+        canvas {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -26,10 +33,20 @@
             height: window.innerHeight,
             backgroundColor: 0x575757,
             antialias: true,
-            resolution: window.devicePixelRatio || 1,
+            autoDensity: true,
+            resolution: window.devicePixelRatio,
         });
 
         document.body.appendChild(app.view);
+
+        function resize() {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', resize);
+
+        let uiLayer = null;
+        let linesVisible = true;
 
         class VertexButton extends PIXI.Graphics {
             constructor(vert) {
@@ -46,6 +63,10 @@
             update() {
                 this.vert.x = this.x;
                 this.vert.y = this.y;
+            }
+
+            setVisible(visible) {
+                this.visible = visible;
             }
         }
 
@@ -66,6 +87,10 @@
                 this.moveTo(this.vertFrom.x, this.vertFrom.y);
                 this.lineTo(this.vertTo.x, this.vertTo.y);
             }
+
+            setVisible(visible) {
+                this.visible = visible;
+            }
         }
 
         function createMesh(meshData) {
@@ -75,6 +100,7 @@
             const blurFilter = new PIXI.filters.BlurFilter();
             blurFilter.blur = meshData.blurAmount;
             polygon.filters = [blurFilter];
+            polygon.alpha = meshData.opacity;
 
             app.stage.addChild(polygon);
 
@@ -151,29 +177,44 @@
             }
 
             updatePolygon();
+
+            return { edgeButtons, vertButtons };
         }
 
+        const meshes = [];
         for (let i = 0; i < data.meshes.length; i++) {
-            createMesh(data.meshes[i]);
+            const mesh = createMesh(data.meshes[i]);
+            meshes.push(mesh);
         }
 
-        const slider = document.createElement("input");
-        slider.type = "range";
-        slider.min = "0";
-        slider.max = "20";
-        slider.value = 5;
-        slider.style.position = "absolute";
-        slider.style.top = "10px";
-        slider.style.left = "10px";
-        document.body.appendChild(slider);
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'Tab') {
+                event.preventDefault();
+                linesVisible = !linesVisible;
+                meshes.forEach((mesh) => {
+                    mesh.edgeButtons.forEach(edge => edge.setVisible(linesVisible));
+                    mesh.vertButtons.forEach(vertex => vertex.setVisible(linesVisible));
+                });
 
-        slider.addEventListener("input", function () {
-            const blurValue = parseFloat(slider.value);
-            app.stage.children.forEach((mesh) => {
-                if (mesh.filters && mesh.filters[0] instanceof PIXI.filters.BlurFilter) {
-                    mesh.filters[0].blur = blurValue;
+                if (!uiLayer) {
+                    uiLayer = new PIXI.Container();
+                    /* const uiBackground = new PIXI.Graphics();
+                    uiBackground.beginFill(0x000000, 0.5);
+                    uiBackground.drawRect(0, 0, app.screen.width, app.screen.height);
+                    uiBackground.endFill();
+                    uiLayer.addChild(uiBackground);
+                    */
+
+                    const uiText = new PIXI.Text('Nodes Setup', { fontFamily: 'Arial', fontSize: 22, fill: 0xffffff });
+                    uiText.x = app.screen.width / 2 - uiText.width / 2;
+                    uiText.y = 40;
+                    uiLayer.addChild(uiText);
+
+                    app.stage.addChild(uiLayer);
                 }
-            });
+
+                uiLayer.visible = !linesVisible;
+            }
         });
 
         app.ticker.add(() => {});

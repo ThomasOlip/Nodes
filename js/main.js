@@ -1,5 +1,3 @@
-//this is the repo updated 24th February 2024
-
 PIXI.settings.PREFER_ENV = 'WEBGL2';
 
 const app = new PIXI.Application({
@@ -16,9 +14,6 @@ document.addEventListener('contextmenu', function(event) {
   event.preventDefault();
 });
 
-//INIT /////////////////////////////////////////
-
-//vfUI = new WFUI(app);
 let vfData = null;
 const uiNodeTemplateArray = [];
 const uiNodeArray = [];
@@ -54,35 +49,6 @@ const viewControls = new ViewControls(app, container, canvas);
 
 const outputNode = nodes;
 const outputCanvas = null;
-
-
-
-
-
-function evaluate(outputNode){
-  if (outputNode.connections.length > 0){
-    // go to next node
-    const connectionNode = outputNode.node.Connections.In[0];
-    // if changes == false > return stored value
-
-    // if changes == true > gather values from weather node values or connection values
-    const numberOfInputValues = ports.In;
-    const nomberOfOutputValues = ports.Out;
-    const allConnectionNodes = [];
-
-
-
-    // if connection values > go to next node and repeat
-
-    // return new value
-
-  }else{
-    console.log("no Output...");
-  }
-}
-
-
-
 
 
 const verts = [{"id": 0, "x": 100, "y": 100,"c": "true"},
@@ -152,46 +118,6 @@ canvas.addChild(bitti);
 canvas.addChild(maskedCanvas1);
 canvas.addChild(maskedCanvas2);
 
-
-
-
-/* function applyBlurFilterOnGraphic(graphic, blurX, blurY){
-
-  const blurFilter = new PIXI.filters.BlurFilter();
-  blurFilter.quality = 20;
-  blurFilter.blurX = blurX;
-  blurFilter.blurY = blurY;
-  graphic.filters = [blurFilter];
-  
-} */
-
-/* function getBitmapFromGraphicsObject(graphicsObject){
-  let graphicTexture;
-  const graphicBoundaryBox = new PIXI.Rectangle();
-  const graphicBitmap = new PIXI.Sprite(graphicTexture);
-  graphicBoundaryBox.x = -graphicsObject.blurX;
-  graphicBoundaryBox.y = -graphicsObject.blurY;
-  graphicBoundaryBox.width = (graphicsObject.width + graphicsObject.blurX) * 2;
-  graphicBoundaryBox.height = (graphicsObject.height + graphicsObject.blurY) * 2;
-
-  graphicTexture = app.renderer.generateTexture(graphicsObject, PIXI.SCALE_MODES.NEAREST, 1, graphicBoundaryBox);
-  graphicBitmap.texture = graphicTexture;
-  return graphicBitmap;
-} */
-
-/* function maskGraphicByGraphic(graphic, graphicMask){
-
-  let graphicBitmap = Canvas.getBitmapFromGraphicsObject(graphic);
-  let maskBitmap = Canvas.getBitmapFromGraphicsObject(graphicMask);
-
-  const masklayer = new PIXI.Container();
-
-  masklayer.addChild(graphicBitmap);
-  canvas.addChild(masklayer);
-  masklayer.mask = maskBitmap;
-  canvas.addChild(maskBitmap);
-} */
-
 gr1.beginFill(0x54a76b);
 gr1.drawCircle(400, 400, 100);
 gr1.endFill();
@@ -203,41 +129,8 @@ gr1.drawCircle(1100, 400, 300);
 gr1.endFill();
 
 
+function resize() {
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+}
 
-
-
-
-
-
-
-
-  
-      
-
-//applyBlurFilterOnGraphic(gr1, 220);
-//maskGraphicByGraphic(gr1, gr2, 0); */
-
-///////////////////////
-// Resize handler to update the app size on window resize
-const resizeHandler = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    
-    // Resize the renderer
-    app.renderer.resize(width, height);
-  
-    // Update the stage scale based on the new dimensions
-    /*const scaleFactor = Math.min(width / appWidth, height / appHeight);
-    console.log(scaleFactor);
-    app.stage.scale.set(scaleFactor);*/
-    
-    // Center the stage
-    //app.stage.position.set(width / 2, height / 2);
-  };
-  
-  // Call resizeHandler on initial load and whenever the window is resized
-  window.addEventListener('resize', resizeHandler);
-  resizeHandler();
-  
-  
-  
+window.addEventListener('resize', resize);

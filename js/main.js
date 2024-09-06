@@ -14,6 +14,7 @@ document.addEventListener('contextmenu', function(event) {
   event.preventDefault();
 });
 
+
 let vfData = null;
 const uiNodeTemplateArray = [];
 const uiNodeArray = [];

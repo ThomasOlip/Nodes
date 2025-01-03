@@ -111,9 +111,9 @@ class Checkbox {
 
         this.tick = new PIXI.Graphics();
         this.tick.lineStyle(2, 0x000000);
-        this.tick.moveTo(5, 10);
-        this.tick.lineTo(10, 15);
-        this.tick.lineTo(18, 5);
+        this.tick.moveTo(4, 10);
+        this.tick.lineTo(9, 14.5);
+        this.tick.lineTo(16, 6);
         this.tick.visible = false;
         this.container.addChild(this.tick);
 
